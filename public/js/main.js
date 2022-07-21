@@ -29,24 +29,24 @@ function render_products(data) {
 }
 
 function render_messages(data) {
-    const today = new Date();
-    const now = today.toLocaleString()
     let html = data.map(function(elem, index) {
         return (`<div>
             <strong style="color:blue">${elem.author}</strong>
-            <span style="color:brown">${now}:</span> 
+            <span style="color:brown">${elem.time}:</span> 
             <em style="color:green">${elem.text}</em> </div>`)
     }).join(" ");
     document.getElementById('messages_container').innerHTML = html;
 }
 
-function addMessage() {
+
+function addMessage(today) {
+    const now = today.toLocaleString()
     let mensaje = {
         author: document.getElementById('username').value,
-        text: document.getElementById('texto').value
+        text: document.getElementById('texto').value,
+        time: now
     };
-    socket.emit('new-message', mensaje); // new-message es el nombre del evento (recordatorio)
-
+    socket.emit('new-message', mensaje);
     document.getElementById('texto').value = ''
     document.getElementById('texto').focus()
 
@@ -60,7 +60,7 @@ function addProduct() {
         imagen: document.getElementById('imagen').value
     };
     console.log(product);
-    socket.emit('new-product', product); // new-message es el nombre del evento (recordatorio)
+    socket.emit('new-product', product);
 
     document.getElementById('title').value = ''
     document.getElementById('price').value = ''
