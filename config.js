@@ -17,7 +17,7 @@ const configSQLite = {
     config: {
         client: 'sqlite3',
         connection: {
-            filename: "../DB/ecommerce.sqlite"
+            filename: "./DB/ecommerce.sqlite"
         },
         useNullAsDefault: true
     }
