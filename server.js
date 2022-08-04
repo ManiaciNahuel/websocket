@@ -3,33 +3,38 @@ const app = express()
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
 const fs = require('fs')
+
+
+const ContenedorDB = require('./contenedores/ContenedorDB.js')
+const { configMySQL, configSQLite } = require('./config.js')
+
 app.use(express.static('public'));
 
-let productos = JSON.parse(fs.readFileSync("productos.txt", 'utf-8'))
-let messages = []
+
+//let productos = JSON.parse(fs.readFileSync("productos.txt", 'utf-8'))
+//let mensajes = []
+const productos = new ContenedorDB(configMySQL.config, configMySQL.table)
+const mensajes = new ContenedorDB(configSQLite.config, configSQLite.table)
 
 
 //Connection
 
-io.on('connection', function(socket) {
+io.on('connection', async socket => {
     console.log('Un cliente se ha conectado');
-    socket.emit('productos', productos);
+    socket.emit('productos', productos.listarAll());
+    socket.emit('mensajes', mensajes.listarAll());
 
-    socket.on('new-product', function(data) {
-        productos.push(data);
+    socket.on('update', data => {
+        productos.guardar(data);
         io.sockets.emit('productos', productos);
     });
-});
 
-io.on('connection', function(socket) {
-    console.log('Un cliente se ha conectado');
-    socket.emit('messages', messages);
-
-    socket.on('new-message', function(data) {
-        messages.push(data);
-        io.sockets.emit('messages', messages);
+    socket.on('update', data => {
+        mensajes.guardar(data);
+        io.sockets.emit('mensajes', mensajes);
     });
 });
+
 // Ejs
 app.set("view engine", "ejs");
 app.set("views", "./public/views/ejs");
