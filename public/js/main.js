@@ -16,10 +16,10 @@ function render_products(data) {
             <article style="margin-bottom: 40px">
                     <img style="width: 90px; " src=${product.imagen} />
                     <h3>
-                        ${product.title}
+                        ${product.nombre}
                     </h3>
                     <p>$
-                        ${product.price}
+                        ${product.precio}
                     </p>
                 </article>
                 <br>
@@ -33,7 +33,7 @@ function render_messages(data) {
     const now = today.toLocaleString()
     let html = data.map(function(elem, index) {
         return (`<div>
-            <strong style="color:blue">${elem.author}</strong>
+            <strong style="color:blue">${elem.author.nombre}</strong>
             <span style="color:brown">${now}:</span> 
             <em style="color:green">${elem.text}</em> </div>`)
     }).join(" ");
@@ -42,11 +42,19 @@ function render_messages(data) {
 
 function addMessage() {
     let mensaje = {
-        author: document.getElementById('username').value,
+        author: {
+            id: document.getElementById('mail').value,
+            nombre: document.getElementById('nombre').value,
+            apellido: document.getElementById('apellido').value,
+            edad: document.getElementById('edad').value,
+            alias: document.getElementById('alias').value,
+            avatar: document.getElementById('avatar').value
+        },
         text: document.getElementById('texto').value
-    };
+    }
     socket.emit('new-message', mensaje); // new-message es el nombre del evento (recordatorio)
-
+    /* fs.writeFileSync("../../mensajes.txt", mensaje) */
+    /* console.log(messages); */
     document.getElementById('texto').value = ''
     document.getElementById('texto').focus()
 
@@ -55,15 +63,15 @@ function addMessage() {
 
 function addProduct() {
     let product = {
-        title: document.getElementById('title').value,
-        price: document.getElementById('price').value,
+        nombre: document.getElementById('prod_name').value,
+        precio: document.getElementById('precio').value,
         imagen: document.getElementById('imagen').value
     };
     console.log(product);
-    socket.emit('new-product', product); // new-message es el nombre del evento (recordatorio)
+    socket.emit('new-product', product); // new-product es el nombre del evento (recordatorio)
 
-    document.getElementById('title').value = ''
-    document.getElementById('price').value = ''
+    document.getElementById('prod_name').value = ''
+    document.getElementById('precio').value = ''
     document.getElementById('imagen').value = ''
 
     return false;

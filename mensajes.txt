@@ -1,0 +1,1 @@
+{"id": 'mensajes', "mensajes": [{"author":{"nombre":"a","apellido":"a","edad":"a","alias":"a","avatar":"a"},"text":"aaaaaaaa"}, {"author":{"nombre":"a","apellido":"a","edad":"a","alias":"a","avatar":"a"},"text":"das"}]}
